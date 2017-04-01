@@ -23,11 +23,11 @@ def rebuild_document_api(sdk, docset):
     '''
     #先删除对应的sdk document api数据
     api_dbs.delete_apis_by_sdk('document_apis', sdk)
-    
+
     document_apis = api_utils.document_apis(sdk, docset)
     #for api in document_apis:
     #    print api
-        
+
     return api_dbs.insert_apis('document_apis', document_apis)
 
 
@@ -37,11 +37,11 @@ def rebuild_framework_header_api(sdk, framework_folder):
     set_B
     '''
     api_dbs.delete_apis_by_sdk('framework_header_apis', sdk)
-    
+
     framework_header_apis = api_utils.framework_header_apis(sdk, framework_folder)
     #for api in framework_header_apis:
     #    print api
-    
+
     return api_dbs.insert_apis('framework_header_apis', framework_header_apis)
 
 
@@ -51,11 +51,11 @@ def rebuild_dump_framework_api(sdk, framework_folder):
     set_A
     '''
     api_dbs.delete_apis_by_sdk('framework_dump_apis', sdk)
-    
+
     framework_dump_header_apis = api_utils.framework_dump_apis(sdk, framework_folder)
     #for api in framework_dump_header_apis:
     #    print api
-    
+
     return api_dbs.insert_apis('framework_dump_apis', framework_dump_header_apis)
 
 def rebuild_dump_private_framework_api(sdk, framework_folder):
@@ -64,12 +64,12 @@ def rebuild_dump_private_framework_api(sdk, framework_folder):
     set_D
     '''
     api_dbs.delete_apis_by_sdk('private_framework_dump_apis', sdk)
-    
+
     pri_framework_dump_apis = api_utils.private_framework_dump_apis(sdk, framework_folder)
     pri_framework_dump_apis = api_utils.deduplication_api_list(pri_framework_dump_apis)
     #for api in pri_framework_dump_apis:
     #    print api
-    
+
     return api_dbs.insert_apis('private_framework_dump_apis', pri_framework_dump_apis)
 
 
@@ -86,7 +86,7 @@ def rebuild_private_api(sdk, include_private_framework = False):
 
     framework_dump_private_apis = []
     framework_dump_apis = api_dbs.get_framework_dump_apis(sdk_version['sdk'])
-    
+
     pub_cnt = 0
     pri_cnt = 0
     __cnt = 0
@@ -131,29 +131,27 @@ def rebuild_private_api(sdk, include_private_framework = False):
 
 def rebuild_sdk_private_api(sdk_version, include_private_framework = False):
     #1. set_A public framework dump api
-    print 'set_A'
+    print 'set_A public framework dump api'
     print rebuild_dump_framework_api(sdk_version['sdk'], sdk_version['framework'])
     #2. set_B public framework .h api
-    print 'set_B'
+    print 'set_B public framework .h api'
     print rebuild_framework_header_api(sdk_version['sdk'], sdk_version['framework'])
     #3. set_C docset file -> ducument api
-    print 'set_C'
+    print 'set_C docset file -> ducument api'
     print rebuild_document_api(sdk_version['sdk'], sdk_version['docset'])
     #4. set_D private framework dump api
-    print 'set_D'
+    print 'set_D private framework dump api'
     print rebuild_dump_private_framework_api(sdk_version['sdk'], sdk_version['private_framework'])
 
     #5. private api
     rebuild_private_api(sdk_version['sdk'], include_private_framework)
-    
-    
+
+
 if __name__ == '__main__':
     #数据库不存在，则创建数据库
     if not os.path.exists(sqlite_info["DB"]):
         print 'db not exists, creating...'
         print other_dbs.create_some_table()
-    
+
     for sdk_version in sdks_config:
         rebuild_sdk_private_api(sdk_version, False)
-
-

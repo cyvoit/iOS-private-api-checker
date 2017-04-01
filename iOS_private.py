@@ -41,9 +41,9 @@ def check_private_api(app, pid):
     dump_result = app_utils.get_dump_result(app)
     app_varibles = app_utils.get_app_variables(dump_result, pid) #app自定义的一些方法，不需要检查
     left = strings - app_varibles #去除一些app中开发人员自定义的方法，剩余app中的一些字符串
-    
+
     app_methods = app_utils.get_app_methods(dump_result, pid) #dump-class分析出app中的类和方法名
-    
+
     app_apis = []
     for m in app_methods:
         class_name = m["class"] if m["class"] != "ctype" else 'cur_app'
@@ -59,7 +59,7 @@ def check_private_api(app, pid):
             #tmp_api['sdk'] = ''
             #tmp_api['framework'] = ''
             app_apis.append(tmp_api)
-    
+
     api_set = api_dbs.get_private_api_list(public) #数据库中的私有api，去除了whitelist白名单
     print '=' * 15
     print 'left app_varibles:', len(left)
@@ -76,8 +76,8 @@ def check_private_api(app, pid):
     # for i in xrange(20):
         # print methods_not_in_app[i]
     print '=' * 15
-    
-    
+
+
     return methods_in_app, method_not_in, private
 
 #检查架构，返回架构数组
@@ -145,7 +145,7 @@ def check_ipa(ipa_path):
     # print 'tmp:', dest_tmp
     if os.path.exists(dest_tmp):
         shutil.rmtree(dest_tmp)
-    
+
     return result
 
 def batch_check(app_folder, excel_path):
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     #######
     #check one app
     # ipa_path = "/Users/summer-wj/code/svn/ljsg_for_netease_20150928_resign.ipa"
-    
+
     # private_1 = open("tmp/private_1.txt", "w")
     # private_2 = open("tmp/private_2.txt", "w")
     # #将strings内容输出到文件中
@@ -195,13 +195,13 @@ if __name__ == '__main__':
     # for aa in a:
     #     print aa
     #     print >>private_1, aa
-     
+
     # print "=" * 50
     # print len(b), "Private Methods not in App, May in Framework Used:"
     # print "*" * 50
     # for bb in b:
     #     print >>private_2, bb
-     
+
     # print "=" * 50
     # print len(c), "Private Framework in App:"
     # print "*" * 50
@@ -212,7 +212,7 @@ if __name__ == '__main__':
     excel_path = os.path.join(cwd, 'tmp/' + utils.get_unique_str() + '.xlsx')
     # excel_path = os.path.join(cwd, 'tmp/test.xlsx') # for test
     print excel_path
-    ipa_folder = '/Users/netease/Downloads/ipas/mg/'
+    ipa_folder = '../ipa-check/'
     # ipa_folder = '/Users/netease/Music/iTunes/iTunes Media/Mobile Applications/'
     # ipa_folder = '/Users/netease/Music/iTunes/iTunes Media/'
     print batch_check(ipa_folder, excel_path)
@@ -222,4 +222,3 @@ if __name__ == '__main__':
     # app_path = '/Users/netease/Downloads/ipas/mg/Payload'
     # app = app_utils.get_executable_file(app_path)
     # print check_architectures(app)
-
